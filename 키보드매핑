@@ -1,0 +1,34 @@
+#include <HID.h>
+
+// ALT 키가 눌렸는지 확인하는 변수
+bool altPressed = false;
+
+void setup() {
+  Keyboard.begin();
+}
+
+void loop() {
+  // HID 라이브러리에서 제공하는 read() 함수를 이용하여 HID 장치의 입력을 확인합니다.
+  // HID 입력이 있으면 HID 가상 장치로 입력을 전송합니다.
+  int key = Keyboard.read();
+
+  // ALT 키가 눌린 경우
+  if (key == KEY_LEFT_ALT || key == KEY_RIGHT_ALT) {
+    altPressed = true;
+  }
+  // 방향키가 눌린 경우
+  else if (key == KEY_UP_ARROW || key == KEY_DOWN_ARROW || key == KEY_LEFT_ARROW || key == KEY_RIGHT_ARROW) {
+    // ALT 키와 함께 눌렸다면
+    if (altPressed) {
+      // ALT + 방향키 입력을 컴퓨터로 전송합니다.
+      Keyboard.press(KEY_LEFT_ALT);
+      Keyboard.press(key);
+      delay(10);
+      Keyboard.releaseAll();
+    }
+  }
+  // 다른 키가 눌린 경우
+  else {
+    altPressed = false;
+  }
+}
